@@ -13,9 +13,9 @@ public class Player extends Entity{
 
     GamePanel gp;
     main.KeyHandler keyHandler;
-
     public final int screenX;
     public final int screenY;
+    int hasKey = 0;
 
     public Player (GamePanel gp, main.KeyHandler keyHandler) {
         this.gp = gp;
@@ -28,6 +28,8 @@ public class Player extends Entity{
         solidArea = new Rectangle();
         solidArea.x = 8;
         solidArea.y = 32;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         solidArea.width = 24;
         solidArea.height = 16;
         
@@ -80,6 +82,10 @@ public class Player extends Entity{
             collisionOn = false;
             gp.collisionChecker.checkTile(this);
 
+            // CHECK OBJECT COLLISSION
+            int objectIndex = gp.collisionChecker.checkObject(this, true);
+            pickUpObject(objectIndex);
+
             // IF COLLISION IS FALSE PLAYER CAN MOVE
             if (!collisionOn) {
                 switch (direction) {
@@ -107,10 +113,31 @@ public class Player extends Entity{
                 }
                 spriteCounter = 0;
             }
+        } 
+    }
+
+    public void pickUpObject(int i) {
+        if (i != 999) {
+            String objectName = gp.object[i].name;
+
+            switch (objectName) {
+                case "Key":
+                    hasKey++;
+                    gp.object[i] = null; // Delete the object we touch from the screen
+                    System.out.println("Key: " + hasKey);
+                    break;
+                case "Door":
+                    if (hasKey > 0) {
+                        gp.object[i] = null;
+                        hasKey--;
+                        System.out.println("Door opened \nKey:" + hasKey);
+                    }
+                break;
+            
+                default:
+                    break;
+            }
         }
-
-        
-
     }
 
     public void draw (Graphics2D g2) {
