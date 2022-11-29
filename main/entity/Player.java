@@ -49,14 +49,18 @@ public class Player extends Entity{
     public void getPlayerImage() {
 
         try {
-            up1 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto.png"));
+            up1 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto_culo1.png"));
+            up2 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto_culo2.png"));
+            up3 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto_culo3.png"));
+            down1 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto_sotto1.png"));
             down2 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto.png"));
+            down3 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto_sotto3.png"));
+            left1 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto_sx1.png"));
+            left2 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto_sx2.png"));
+            left3 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto_sx3.png"));
+            right1 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto_dx1.png"));
             right2 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto.png"));
+            right3 = ImageIO.read(getClass().getResourceAsStream("/res/player/Rapto_dx3.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,6 +113,8 @@ public class Player extends Entity{
                 if (spriteNum == 1) {
                     spriteNum = 2;
                 } else if (spriteNum == 2) {
+                    spriteNum = 3;
+                } else if (spriteNum == 3) {
                     spriteNum = 1;
                 }
                 spriteCounter = 0;
@@ -133,7 +139,10 @@ public class Player extends Entity{
                         System.out.println("Door opened \nKey:" + hasKey);
                     }
                 break;
-            
+                case "Boots":
+                    speed += 1;
+                    gp.object[i] = null;
+                break;
                 default:
                     break;
             }
@@ -152,6 +161,9 @@ public class Player extends Entity{
                 if (spriteNum == 2) {
                     image = up2;
                 }
+                if (spriteNum == 3) {
+                    image = up3;
+                }
                 break;
             case "down":
                 if (spriteNum == 1) {
@@ -159,6 +171,9 @@ public class Player extends Entity{
                 }
                 if (spriteNum == 2) {
                     image = down2;
+                }
+                if (spriteNum == 3) {
+                    image = down3;
                 }
                 break;
             case "left":
@@ -168,6 +183,9 @@ public class Player extends Entity{
                 if (spriteNum == 2) {
                     image = left2;
                 }
+                if (spriteNum == 3) {
+                    image = left3;
+                }
                 break;
             case "right":
                 if (spriteNum == 1) {
@@ -175,6 +193,9 @@ public class Player extends Entity{
                 }
                 if (spriteNum == 2) {
                     image = right2;
+                }
+                if (spriteNum == 3) {
+                    image = right3;
                 }
                 break;
         }
