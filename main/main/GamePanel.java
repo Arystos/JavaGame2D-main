@@ -27,18 +27,21 @@ public class GamePanel extends JPanel implements Runnable{
     //WORLD SETTINGS
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
-    public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxWorldRow;
 
     //FPS
     int FPS = 60;
 
-    // Istances
+    // SYSTEM
     TileManager tileManager = new TileManager(this);
     KeyHandler keyHandler = new KeyHandler();
-    Thread gameThread;
+    Sound music = new Sound();
+    Sound soundEffect = new Sound();
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public AssetSetter assetSetter = new AssetSetter(this);
+    public UI ui = new UI(this);
+    Thread gameThread;
+
+    //ENTITY AND OBJECT
     public Player player = new Player (this, keyHandler);
     public SuperObject object[] = new SuperObject [10]; // Display up to 10 objects at the same time
 
@@ -53,8 +56,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     // Caricamento dei componenti di gioco
     public void setupGame() {
-
         assetSetter.setObject();
+
+        playMusic(0);
     }
 
 
@@ -103,14 +107,14 @@ public class GamePanel extends JPanel implements Runnable{
         
     }
 
-    // 1 UPDATE: Update Informaion
+    //Update Informaion
     public void update() {
 
         player.update();
 
     }
 
-    // 2 DRAW :Draw the screen with the upload information
+    //Draw the screen with the upload information
     @Override
     public void paintComponent(Graphics g) {
 
@@ -130,6 +134,24 @@ public class GamePanel extends JPanel implements Runnable{
         //PLAYER
         player.draw(g2);
 
+        // UI
+        ui.draw(g2);
+
         g2.dispose();
+    }
+
+    public void playMusic(int i) {
+        music.setFile(i);
+        music.play();
+        music.loop();
+    }
+
+    public void stopMusic() {
+        music.stop();
+    }
+
+    public void playSoundEffect(int i) {
+        soundEffect.setFile(i);
+        soundEffect.play();
     }
 }

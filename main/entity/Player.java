@@ -1,9 +1,12 @@
 package entity;
 
 import main.GamePanel;
+
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.StandardOpenOption;
 import java.awt.Rectangle;
 
 import javax.imageio.ImageIO;
@@ -15,7 +18,8 @@ public class Player extends Entity{
     main.KeyHandler keyHandler;
     public final int screenX;
     public final int screenY;
-    int hasKey = 0;
+    public int hasKey = 0;
+    int standCounter = 0; // Buffer to stay still
 
     public Player (GamePanel gp, main.KeyHandler keyHandler) {
         this.gp = gp;
@@ -26,11 +30,11 @@ public class Player extends Entity{
 
         // Hitbox
         solidArea = new Rectangle();
-        solidArea.x = 8;
+        solidArea.x = 16;
         solidArea.y = 32;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        solidArea.width = 24;
+        solidArea.width = 16;
         solidArea.height = 16;
         
 
@@ -119,7 +123,13 @@ public class Player extends Entity{
                 }
                 spriteCounter = 0;
             }
-        } 
+        } else { // If player is still
+            standCounter++;
+            if (standCounter == 20) {
+                spriteNum = 2; // Use sprite [2] (Still sprite)
+                standCounter = 0;
+            }
+        }
     }
 
     public void pickUpObject(int i) {
@@ -128,21 +138,39 @@ public class Player extends Entity{
 
             switch (objectName) {
                 case "Key":
+                    gp.playSoundEffect(1);
                     hasKey++;
                     gp.object[i] = null; // Delete the object we touch from the screen
-                    System.out.println("Key: " + hasKey);
+                    if (hasKey == 1) {
+                        gp.ui.showMessage("You got a key!");
+                    } else if (hasKey == 2) {
+                        gp.ui.showMessage("You got another key!");
+                    } else if (hasKey == 3) {
+                        gp.ui.showMessage("Enough! Find the treasure");
+                    }
+                    
                     break;
                 case "Door":
                     if (hasKey > 0) {
+                        gp.playSoundEffect(3);
                         gp.object[i] = null;
                         hasKey--;
-                        System.out.println("Door opened \nKey:" + hasKey);
+                        gp.ui.showMessage("Door opened!");
+                    } else {
+                        gp.ui.showMessage("You need a key!");
                     }
                 break;
                 case "Boots":
+                    gp.playSoundEffect(2);
                     speed += 1;
                     gp.object[i] = null;
+                    gp.ui.showMessage("SPEEEEED!");
                 break;
+                case "Chest":
+                    gp.ui.gameFinished = true;
+                    gp.stopMusic();
+                    gp.playSoundEffect(4);
+                    break;
                 default:
                     break;
             }
@@ -201,5 +229,10 @@ public class Player extends Entity{
         }
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 
+        // Show Collision Shape
+        /* 
+        g2.setColor(Color.red);
+        g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
+        */
     }
 }
